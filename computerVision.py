@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 
+#Data Augmentation
+
+
+
+
+
+
 
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 
@@ -41,4 +48,5 @@ history = model.fit(train_images, train_labels, epochs=1,
                     validation_data=(test_images, test_labels))
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+#prints accuracy of model after training
 print(test_acc)
