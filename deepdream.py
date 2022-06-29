@@ -29,6 +29,8 @@ def show(img):
 
 #downsize image
 original_img = download(url, max_dim=500)
+
+
 show(original_img)
 display.display(display.HTML('Image cc-by: <a "href=https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka</a>'))
 
@@ -36,7 +38,7 @@ display.display(display.HTML('Image cc-by: <a "href=https://commons.wikimedia.or
 base_model = tf.keras.applications.InceptionV3(include_top=False, weights='imagenet')
 
 #can go mixed0 - mixed10 for the layers
-names = ['mixed2', 'mixed6']
+names = ['mixed4', 'mixed6']
 layers = [base_model.get_layer(name).output for name in names]
 
 #feature extraction model

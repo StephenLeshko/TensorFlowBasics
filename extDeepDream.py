@@ -17,6 +17,12 @@ def download(url, max_dim=None):
         img.thumbnail((max_dim, max_dim))
     return np.array(img)
 
+def download_local(path, max_dim=None):
+    local_img = PIL.Image.open(path)
+    if max_dim:
+        local_img.thumbnail((max_dim, max_dim))
+    return np.array(local_img)
+
 #turns image into correct scale
 def deprocess(img):
     img = 255*(img + 1.0)/2.0
@@ -29,7 +35,11 @@ def show(img):
     new_img.show()
 
 #downsize image
-original_img = download(url, max_dim=500)
+# original_img = download(url, max_dim=500)
+
+original_img = download_local('DogsCats.jpg', 500)
+
+
 show(original_img)
 # display.display(display.HTML('Image cc-by: <a "href=https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg">Von.grzanka</a>'))
 
@@ -37,7 +47,7 @@ show(original_img)
 base_model = tf.keras.applications.InceptionV3(include_top=False, weights='imagenet')
 
 #can go mixed0 - mixed10 for the layers
-names = ['mixed5', 'mixed10']
+names = ['mixed9', 'mixed10']
 layers = [base_model.get_layer(name).output for name in names]
 
 #feature extraction model
