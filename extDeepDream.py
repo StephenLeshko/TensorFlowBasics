@@ -5,7 +5,6 @@ import matplotlib as mpl
 import IPython.display as display
 import PIL.Image
 import time
-
 url = 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'
 
 #converts image to numpy array
@@ -30,7 +29,6 @@ def deprocess(img):
 
 #show the image
 def show(img):
-    # display.display(PIL.Image.fromarray(np.array(img)))
     new_img = PIL.Image.fromarray(np.array(img))
     new_img.show()
 

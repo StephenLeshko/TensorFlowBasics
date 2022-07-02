@@ -53,6 +53,7 @@ print('\n\nTesting Audio...')
 test_file = tf.io.read_file(DATASET_PATH+'/down/0a9f9af7_nohash_0.wav')
 test_audio, _ = tf.audio.decode_wav(contents=test_file)
 test_audio.shape
+print('Shape of the data:' , test_audio.shape)
 
 #preprocesses raw WAV into audio tensor
 def decode_audio(audio_binary):
@@ -250,60 +251,72 @@ model.compile(
 )
 
 #training (fitting) the model
-print('Beginning of Training...\n\n')
-EPOCHS = 10
-history = model.fit(
-    train_ds,
-    validation_data=val_ds,
-    epochs=EPOCHS,
-    callbacks=tf.keras.callbacks.EarlyStopping(verbose=1, patience=2),
-)
 
-# model.save('audioBasic2.h5')
 
-#audioBasic1.h5
+#-------START OF TRAINING-------
+# EPOCHS = 10
+# history = model.fit(
+#     train_ds,
+#     validation_data=val_ds,
+#     epochs=EPOCHS,
+#     callbacks=tf.keras.callbacks.EarlyStopping(verbose=1, patience=2),
+# )
 
-print('End of training')
-metrics = history.history
-plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
-plt.legend(['loss', 'val_loss'])
-plt.show()
 
-#testing
-test_audio = []
-test_labels = []
+# print('End of training')
+# metrics = history.history
+# plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
+# plt.legend(['loss', 'val_loss'])
+# plt.show()
 
-for audio, label in test_ds:
-  test_audio.append(audio.numpy())
-  test_labels.append(label.numpy())
+# #testing
+# test_audio = []
+# test_labels = []
 
-test_audio = np.array(test_audio)
-test_labels = np.array(test_labels)
+# for audio, label in test_ds:
+#   test_audio.append(audio.numpy())
+#   test_labels.append(label.numpy())
 
-y_pred = np.argmax(model.predict(test_audio), axis=1)
-y_true = test_labels
+# test_audio = np.array(test_audio)
+# test_labels = np.array(test_labels)
 
-test_acc = sum(y_pred == y_true) / len(y_true)
-print(f'Test set accuracy: {test_acc:.0%}')
+# y_pred = np.argmax(model.predict(test_audio), axis=1)
+# y_true = test_labels
 
-#confusion matrix
-confusion_mtx = tf.math.confusion_matrix(y_true, y_pred)
-plt.figure(figsize=(10, 8))
-sns.heatmap(confusion_mtx,
-    xticklabels=commands,
-    yticklabels=commands,
-    annot=True, fmt='g')
-plt.xlabel('Prediction')
-plt.ylabel('Label')
-plt.show()
+# test_acc = sum(y_pred == y_true) / len(y_true)
+# print(f'Test set accuracy: {test_acc:.0%}')
+
+# #confusion matrix
+# confusion_mtx = tf.math.confusion_matrix(y_true, y_pred)
+# plt.figure(figsize=(10, 8))
+# sns.heatmap(confusion_mtx,
+#     xticklabels=commands,
+#     yticklabels=commands,
+#     annot=True, fmt='g')
+# plt.xlabel('Prediction')
+# plt.ylabel('Label')
+# plt.show()
+
+#-------END OF TRAINING------
+
+model = models.load_model('audioBasic1.h5')
 
 #testing on audio file
 print('Testing on file\n\n')
-sample_file = data_dir/'no/01bb6a2a_nohash_0.wav'
+# sample_file = data_dir/'no/01bb6a2a_nohash_0.wav'
+#shape of sample: (1, 124, 129, 1)
+
+#insert different sample_file here...
+# sample_file = 'guess.wav'
+
+
+
+print('done with test')
 
 sample_ds = preprocess_dataset([str(sample_file)])
 
 for spectrogram, label in sample_ds.batch(1):
+    print('Shape:\n', spectrogram.shape)
     prediction = model(spectrogram)
     plt.bar(commands, tf.nn.softmax(prediction[0]))
     plt.title(f'Predictions for "{commands[label[0]]}"')
